@@ -14,6 +14,8 @@ def index(request):
 
     device_id = data['client_id']
 
+    print(Device.objects.filter(id=device_id))
+
     if data['action'] == 'client_connected':
         device = Device.objects\
             .on_conflict(['id'], ConflictAction.NOTHING)\
