@@ -16,7 +16,7 @@ def index(request):
 
     if data['action'] == 'client_connected':
         device = Device.objects\
-            .on_conflict(['id'], ConflictAction.NOTHING)\
+            .on_conflict(['id'], ConflictAction.UPDATE)\
             .insert_and_get(id=device_id, online=True)
 
         device.temps.create(value=29)
