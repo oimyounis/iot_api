@@ -14,8 +14,6 @@ def index(request):
 
     device_id = data['client_id']
 
-    print(Device.objects.filter(id=device_id))
-
     if data['action'] == 'client_connected':
         device = Device.objects\
             .on_conflict(['id'], ConflictAction.NOTHING)\
@@ -29,6 +27,7 @@ def index(request):
     elif data['action'] == 'client_disconnected':
         Device.objects\
             .on_conflict(['id'], ConflictAction.UPDATE)\
-            .insert(id=device_id, online=False)
+            .insert(id=device_id, online=False,
+                    last_shutdown_reason=data['reason'] if 'reason' in data else None)
 
     return HttpResponse()
