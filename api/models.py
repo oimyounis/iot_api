@@ -6,6 +6,7 @@ class Device(PostgresModel):
     id = models.CharField(primary_key=True, max_length=255)
     model = models.CharField(max_length=255, null=True)
     online = models.BooleanField(default=False)
+    last_shutdown_reason = models.CharField(max_length=255, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
