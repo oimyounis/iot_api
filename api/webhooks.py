@@ -9,23 +9,26 @@ from .models import Device
 
 @csrf_exempt
 def index(request):
-    data = json.loads(request.body.decode())
-    print(data)
+    try:
+        data = json.loads(request.body.decode())
+        print(data)
 
-    device_id = data['client_id']
+        device_id = data['client_id']
 
-    if data['action'] == 'client_connected':
-        Device.objects\
-            .on_conflict(['id'], ConflictAction.UPDATE)\
-            .insert_and_get(id=device_id,
-                            online=True)
+        if data['action'] == 'client_connected':
+            Device.objects\
+                .on_conflict(['id'], ConflictAction.UPDATE)\
+                .insert_and_get(id=device_id,
+                                online=True)
 
-    elif data['action'] == 'client_disconnected':
-        Device.objects\
-            .on_conflict(['id'], ConflictAction.UPDATE)\
-            .insert(id=device_id,
-                    online=False,
-                    last_shutdown_reason=
-                    data['reason'] if 'reason' in data and data['reason'] != 'undefined' else 'unknown')
+        elif data['action'] == 'client_disconnected':
+            Device.objects\
+                .on_conflict(['id'], ConflictAction.UPDATE)\
+                .insert(id=device_id,
+                        online=False,
+                        last_shutdown_reason=
+                        data['reason'] if 'reason' in data and data['reason'] != 'undefined' else 'unknown')
+    except:
+        pass
 
     return HttpResponse()
